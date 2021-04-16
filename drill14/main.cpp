@@ -1,4 +1,4 @@
-#include <iostream>
+#include "std_lib_facilities.h"
 
 using namespace std;
 
@@ -50,7 +50,15 @@ int main()
 	d2.f();
 	d2.vf();
 	d2.pvf();
-	
+	cout << endl;
+
+	/*B1& b1_ref {d1};
+	b1_ref.vf();
+	b1_ref.f();
+	b1_ref.pvf();
+	cout << endl;
+	*/
+
 	D21 d21;
 	D22 d22;
 	f(d21);
