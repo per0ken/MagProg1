@@ -7,7 +7,7 @@
 using namespace std;
 
 template<typename Iterator>
-void increase(Iterator first, Iterator last, int number)
+void add(Iterator first, Iterator last, int number)
 {
 	while(first!=last)
 	{
@@ -34,9 +34,9 @@ int main()
 	vector<int> int_vec_2 = int_vec;
 	list<int> int_list_2 = int_list;
 
-	increase(int_array_2.begin(), int_array_2.end(), 2);
-	increase(int_vec_2.begin(), int_vec_2.end(), 3);
-	increase(int_list_2.begin(), int_list_2.end(), 5);
+	add(int_array_2.begin(), int_array_2.end(), 2);
+	add(int_vec_2.begin(), int_vec_2.end(), 3);
+	add(int_list_2.begin(), int_list_2.end(), 5);
 
 	my_copy(int_array_2.begin(), int_array_2.end(), int_vec_2.begin());
 	my_copy(int_list_2.begin(), int_list_2.end(), int_array_2.begin());
