@@ -1,220 +1,114 @@
 #include "std_lib_facilities.h"
 
-template<typename T> 
-	struct S {
-
-		S() {}
-
-		S(T t) : val(t) {}
-	
-		T& get();
-		const T& get() const;
-
-		void set(const T& t);
-		T& operator=(const T&);
+template<typename T>
+struct S
+{
 private:
-	T val; 
+    T val;
+    T n_val;
+public:
+    explicit S(T v = 0) : val{ v } {};
+
+    T& get();
+    const T& get() const;
+
+    void set(T n_val) { val = n_val; };
 };
 
-// Nem konstans a "val"
-
-template<typename T> 
-	T& S<T>::get() 
-		{ return val; }
-
-// Konstans a "val"
-
-template<class T> 
-	const T& S<T>::get() 
-	const { return val; }
-
-//set()
-
-template<typename T> 
-	void S<T>::set(const T& uj) { val = uj; }
-
-//'=' operator a set helyett >>> tehát az operator 
-//gyakorlatilag definiál egy műveletet mint egy funct
-
-template<class T> T& S<T>::operator=(const T& newv)
+template<typename T>
+T& S<T>::get()
 {
-	val = newv;
-	return val;
+    return val;
 }
-
-// Beolvasás istream kell a templeteb miatt ...hogy a konténerből tudjunk olvasni
-
-template<class T> istream& operator>>(istream& is, S<T>& ss)
-{
-	T v;
-	cin >> v;
-	if (!is) 
-		return is;
-	ss = v;
-	return is;
-}
-
-
-//read_val()
-
-template<class T> 
-	void read_val(T& v)
-		{
-			cin >> v;
-		}
-
-// Bonus beolvasas >>>> hibakazelés nélkül .. a MAX_INT nem működik :/
 
 template<typename T>
-istream& operator>>(istream& is, vector<T>& vt)
+const T& S<T>::get() const
 {
-	T temp;
-	string s;
-	while (is >> s)
-	{
-			stringstream ss;
-			ss << s;
-			ss >> temp;
-			vt.push_back(temp);
-		
-	}
-
-	return is;
+    return val;
 }
- // Bonus kiiratas >>> 
 
 template<typename T>
-ostream& operator<<(ostream& os, vector<T>& vt)
+void read_val(T& v)
 {
-	
-	for (int i = 0; i < vt.size() - 1; ++i)
-	{
-		os << vt[i] << endl;
-	}
-	os << vt[vt.size() - 1] << endl;
-	return os;
+    cin >> v;
+}
+
+template<typename T>
+ostream& operator<<(ostream& os, vector<T>& v)
+{
+    os << "{";
+    for (int i = 0; i < v.size(); ++i)
+    {
+        os << v[i] << (i < v.size() - 1 ? ", ");
+    }
+    os << "}\n";
+
+    return os;
+}
+
+template<typename T>
+istream& operator>>(istream& is, vector<T>& v)
+{
+    char c = 0;
+    is >> c;
+    if (c != '{') {
+        is.unget();
+        return is;
+    }
+    for (T val; is >> val;) {
+        v.push_back(val);
+        is >> c;
+        if (c != ',') break;
+    }
+    return is;
 }
 
 int main()
 {
-	
-	//-------------------------------
-	S<int> s_int(1234);
-	S<char> s_char('a');
-	S<double> s_double(9.8);
-	S<string> s_string("Ez_egy_string");
-	vector<int> vi;
-	vi.push_back(12);
-	vi.push_back(13);
-	vi.push_back(14);
-	vi.push_back(15);
-	S<vector<int>> svi(vi);
-	//-------------------------------
-	
-	/* public val mivel publik ezért nem működik mert a vasl privat
-	cout << "Elso kiiratas:" << endl; cout << endl;
-	cout << "s_int = " << s_int.val << endl;
-	cout << "s_char = " << s_char.val << endl;
-	cout << "s_double = " << s_double.val << endl;
-	cout << "s_string = " << s_string.val << endl;
-	for (int i = 0; i < svi.val.size(); i++)
-	{
-		cout << "svi[" << i << "] = " << svi.val[i] << endl;
-	}
-	
-*/
+    S<int> S_int{ 8 };
+    cout << S_int.get() << endl;
 
-	cout << "Masodik kiiratas:" << endl; cout << endl;
-	cout << "s_int = " << s_int.get() << endl;
-	cout << "s_char = " << s_char.get() << endl;
-	cout << "s_double = " << s_double.get() << endl;
-	cout << "s_string = " << s_string.get() << endl;
-	for (int i = 0; i < svi.get().size(); i++)
-	{
-		cout << "svi[" << i << "] = " << svi.get()[i] << endl;
-	} cout << endl;
+    S<char> S_char{ 'p' };
+    cout << S_char.get() << endl;
 
+    S<double> S_double{ 14.5 };
+    cout << S_double.get() << endl;
 
-	// set() felülirashoz
+    S<string> S_string{ "Lalyos" };
+    cout << S_string.get() << endl;
 
-	s_int.set(4321);
-	s_char.set('c');
-	s_double.set(4.20);
-	s_string.set("Benzin");
-	vi[0] = 21; // csak kettőt irok felül a o adik illetve a 2 edik lemet
-	vi[2] = 22;
-	svi.set(vi);
+    S<vector<int>> S_vector{ vector<int>{11, 22, 33, 69} };
+    cout << S_vector.get() << endl;
 
-	cout << "Kiiratas a set() utan:" << endl; cout << endl;
-	cout << "s_int = " << s_int.get() << endl;
-	cout << "s_char = " << s_char.get() << endl;
-	cout << "s_double = " << s_double.get() << endl;
-	cout << "s_string = " << s_string.get() << endl;
-	for (int i = 0; i < svi.get().size(); i++)
-	{
-		cout << "svi[" << i << "] = " << svi.get()[i] << endl;
-	} cout << endl;
+    int i;
+    cout << "Int: ";
+    read_val(i);
+    S<int> S_int2{ i };
+    cout << S_int2.get() << endl;
 
-	
-	//'=' operator használata új adatok felvételéhez
+    char c;
+    cout << "Char: ";
+    read_val(c);
+    S<char> S_char2{ c };
+    cout << S_char2.get() << endl;
 
-	s_int = 4231;
-	s_char = 't';
-	s_double = 742.2;
-	s_string = "Mákosguba";
-	vi[0] = 20;
-	vi[1] = 23;
-	svi = vi;
+    double d;
+    cout << "Double: ";
+    read_val(d);
+    S<double> S_double2{ d };
+    cout << S_double2.get() << endl;
 
-	cout << "Elemek kiiratasa az '=' operator hasznalata utan:" << endl; cout << endl;
+    string s;
+    cout << "String: ";
+    read_val(s);
+    S<string> S_string2{ s };
+    cout << S_string2.get() << endl;
 
-	cout << "s_int = " << s_int.get() << endl;
-	cout << "s_char = " << s_char.get() << endl;
-	cout << "s_double = " << s_double.get() << endl;
-	cout << "s_string = " << s_string.get() << endl;
-	for (int i = 0; i < svi.get().size(); i++)
-	{
-		cout << "svi[" << i << "] = " << svi.get()[i] << endl;
-	} cout << endl;
+    vector<int> v2;
+    cout << "Vector<int> { val1, val2, val3 }: ";
+    read_val(v2);
+    S<vector<int>> S_vector2{ v2 };
+    cout << S_vector2.get();
 
-	// Beolvasás a felhasználótól a read_val segítségével .. 
-
-	cout << "FElhasznalo adatainak beolvasasa read_val lal: " << endl; cout << endl;
-	cout << "s_int = ";
-	read_val(s_int);
-	cout << "s_char = ";
-	read_val(s_char);
-	cout << "s_double = ";
-	read_val(s_double);
-	cout << "s_string = ";
-	read_val(s_string);
-
-	// egyszerű kiiratás
-	
-	cout << endl;
-	cout << "Felhasznalo adatai kiiratasa a red_val után ..." << endl;
-	cout << "s_int = " << s_int.get() << endl;
-	cout << "s_char = " << s_char.get() << endl;
-	cout << "s_double = " << s_double.get() << endl;
-	cout << "s_string = " << s_string.get() << endl;
-
-
-	cout << "Felhasznalo adatainak beolvasasa >> operator ral: " << endl; cout << endl;
-	cout << "s_int = ";
-	cin >> s_int;
-	cout << "s_char = ";
-	cin >>s_char;
-	cout << "s_double = ";
-	cin >>s_double;
-	cout << "s_string = ";
-	cin>> s_string ;
-
-	cout << endl;
-	cout << "Felhasznalo adatai kiiratasa a >> után ..." << endl;
-	cout << "s_int = " << s_int.get() << endl;
-	cout << "s_char = " << s_char.get() << endl;
-	cout << "s_double = " << s_double.get() << endl;
-	cout << "s_string = " << s_string.get() << endl;
-
-
+    return 0;
 }
