@@ -36,12 +36,11 @@ void read_val(T& v)
 template<typename T>
 ostream& operator<<(ostream& os, vector<T>& v)
 {
-    os << "{";
+
     for (int i = 0; i < v.size(); ++i)
     {
-        os << v[i] << (i < v.size() - 1 ? ", ");
+        os << "v["<<i+1<<"]: " << v[i] << " ";
     }
-    os << "}\n";
 
     return os;
 }
@@ -51,10 +50,7 @@ istream& operator>>(istream& is, vector<T>& v)
 {
     char c = 0;
     is >> c;
-    if (c != '{') {
-        is.unget();
-        return is;
-    }
+
     for (T val; is >> val;) {
         v.push_back(val);
         is >> c;
@@ -65,10 +61,10 @@ istream& operator>>(istream& is, vector<T>& v)
 
 int main()
 {
-    S<int> S_int{ 8 };
+    S<int> S_int{ 20 };
     cout << S_int.get() << endl;
 
-    S<char> S_char{ 'p' };
+    S<char> S_char{ 's' };
     cout << S_char.get() << endl;
 
     S<double> S_double{ 14.5 };
