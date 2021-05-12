@@ -74,7 +74,7 @@ int main()
     S<double> S_double{ 14.5 };
     cout << S_double.get() << endl;
 
-    S<string> S_string{ "Lalyos" };
+    S<string> S_string{ "alma" };
     cout << S_string.get() << endl;
 
     S<vector<int>> S_vector{ vector<int>{11, 22, 33, 69} };
